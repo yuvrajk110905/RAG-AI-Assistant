@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Class Notes Assistant</title>
+    <style>
+        /* GitHub Markdown CSS (minimal, for .markdown-body) */
+        .markdown-body {
+            font-family: inherit;
+            font-size: 1rem;
+            color: #24292f;
+            line-height: 1.6;
+        }
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            font-weight: 600;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+        .markdown-body h1 { font-size: 1.5em; }
+        .markdown-body h2 { font-size: 1.25em; }
+        .markdown-body h3 { font-size: 1.1em; }
+        .markdown-body ul,
+        .markdown-body ol {
+            margin: 0.5em 0 0.5em 1.5em;
+        }
+        .markdown-body code {
+            background: #f6f8fa;
+            color: #e83e8c;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+        .markdown-body pre {
+            background: #f6f8fa;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.5em 0;
+        }
+        .markdown-body blockquote {
+            border-left: 4px solid #d0d7de;
+            color: #6a737d;
+            padding: 0.5em 1em;
+            margin: 0.5em 0;
+            background: #f6f8fa;
+            border-radius: 4px;
+        }
+        .markdown-body table {
+            border-collapse: collapse;
+            margin: 0.5em 0;
+        }
+        .markdown-body th,
+        .markdown-body td {
+            border: 1px solid #d0d7de;
+            padding: 6px 13px;
+        }
+        .markdown-body a {
+            color: #0969da;
+            text-decoration: underline;
+        }
+        .markdown-body img {
+            max-width: 100%;
+        }
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+            min-height: 600px;
+        }
+        
+        .upload-section {
+            padding: 40px;
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        .agents-section {
+            padding: 40px;
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        .chat-section {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #374151;
+        }
+        
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            border-color: #6366f1;
+            background-color: #f8fafc;
+        }
+        
+        .upload-area.dragover {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #9ca3af;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+        }
+        
+        .file-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .messages {
+            flex: 1;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+            background: #fafafa;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            background: #e0e7ff;
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .message.assistant {
+            background: #f0f9ff;
+            margin-right: auto;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: none;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .status.loading {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .upload-section, .agents-section {
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Class Notes Assistant</h1>
+            <p>Upload your documents and chat with your knowledge base</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="upload-section">
+                <h2 class="section-title">📁 Upload Documents</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📄</div>
+                    <p><strong>Drop files here</strong> or <span style="color: #6366f1;">browse</span></p>
+                    <p style="font-size: 0.9rem; color: #6b7280; margin-top: 10px;">
+                        Supports PDF, TXT, and DOCX files (max 10MB)
+                    </p>
+                </div>
+                
+                <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.txt,.docx">
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="selectFiles()">Choose Files</button>
+                    <button class="btn btn-secondary" onclick="loadDocuments()">Refresh List</button>
+                </div>
+                
+                <div id="status"></div>
+                <div id="fileList" class="file-list"></div>
+            </div>
+            
+            <div class="agents-section">
+                <h2 class="section-title">🤖 AI Agents</h2>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">📚 Study Planner</h3>
+                    <input type="text" id="studySubject" placeholder="Subject (e.g., Mathematics)" style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;">
+                    <input type="text" id="studyTopics" placeholder="Topics (comma-separated)" style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;">
+                    <input type="text" id="studyDeadline" placeholder="Deadline (e.g., 2 weeks)" style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;">
+                    <button class="btn btn-primary" onclick="generateStudyPlan()" style="width: 100%;">Generate Study Plan</button>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">📝 Assignment Helper</h3>
+                    <textarea id="assignmentDescription" placeholder="Describe your assignment..." style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;" rows="3"></textarea>
+                    <textarea id="assignmentRequirements" placeholder="Requirements (optional)..." style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;" rows="2"></textarea>
+                    <button class="btn btn-primary" onclick="getAssignmentHelp()" style="width: 100%;">Get Assignment Help</button>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">🧠 Concept Explainer</h3>
+                    <input type="text" id="conceptToExplain" placeholder="Enter concept to explain..." style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;">
+                    <button class="btn btn-primary" onclick="explainConcept()" style="width: 100%;">Explain Concept</button>
+                </div>
+                
+                <div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">📄 Text Summarizer</h3>
+                    <textarea id="textToSummarize" placeholder="Paste text to summarize..." style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;" rows="4"></textarea>
+                    <button class="btn btn-primary" onclick="summarizeText()" style="width: 100%;">Summarize Text</button>
+                </div>
+            </div>
+            
+            <div class="chat-section">
+                <h2 class="section-title">💬 Chat with Your Notes</h2>
+                
+                <div class="chat-container">
+                    <div id="messages" class="messages">
+                        <div class="message assistant">
+                            <strong>AI Assistant:</strong> Hi! I'm ready to help you with your class notes. Upload some documents and ask me questions about them!
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <textarea id="messageInput" class="chat-input" placeholder="Ask a question about your documents..." rows="3"></textarea>
+                        <button class="btn btn-primary" onclick="sendMessage()" style="height: fit-content;">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const API_BASE = '/api';
+        
+        // File upload functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const status = document.getElementById('status');
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+
+        // Drag and drop handlers
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        uploadArea.addEventListener('click', selectFiles);
+
+        function selectFiles() {
+            fileInput.click();
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function showStatus(message, type) {
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+            setTimeout(() => {
+                status.innerHTML = '';
+            }, 5000);
+        }
+
+        async function handleFiles(files) {
+            for (let file of files) {
+                if (file.size > 10 * 1024 * 1024) {
+                    showStatus(`File ${file.name} is too large (max 10MB)`, 'error');
+                    continue;
+                }
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    showStatus(`Uploading ${file.name}...`, 'loading');
+                    
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        showStatus(`Successfully uploaded ${file.name}`, 'success');
+                        loadDocuments();
+                    } else {
+                        showStatus(`Error uploading ${file.name}: ${result.detail}`, 'error');
+                    }
+                } catch (error) {
+                    showStatus(`Error uploading ${file.name}: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function loadDocuments() {
+            try {
+                const response = await fetch('/documents');
+                const documents = await response.json();
+                
+                fileList.innerHTML = '';
+                documents.forEach(doc => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span>📄 ${doc.filename}</span>
+                        <span style="font-size: 0.9rem; color: #6b7280;">${new Date(doc.uploaded_at).toLocaleDateString()}</span>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+            } catch (error) {
+                console.error('Error loading documents:', error);
+            }
+        }
+
+        // Chat functionality
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            messageInput.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message, use_context: true })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    addMessage(result.response, 'assistant');
+                } else {
+                    addMessage(`Error: ${result.detail || result.message || 'Unknown error'}`, 'assistant');
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
+                addMessage(`Error: ${error.message}`, 'assistant');
+            }
+        }
+
+        function addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            if (sender === 'assistant') {
+                // Render Markdown for assistant messages
+                messageDiv.innerHTML = `<strong>AI Assistant:</strong> <span class="markdown-body">${marked.parse(content)}</span>`;
+            } else {
+                messageDiv.innerHTML = `<strong>You:</strong> ${content}`;
+            }
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Handle Enter key in textarea
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Load documents on page load
+        loadDocuments();
+
+        // AI Agent Functions
+        async function generateStudyPlan() {
+            const subject = document.getElementById('studySubject').value.trim();
+            const topicsText = document.getElementById('studyTopics').value.trim();
+            const deadline = document.getElementById('studyDeadline').value.trim();
+            
+            if (!subject || !deadline) {
+                showStatus('Please fill in at least subject and deadline', 'error');
+                return;
+            }
+            
+            const topics = topicsText ? topicsText.split(',').map(t => t.trim()) : [];
+            
+            try {
+                showStatus('Generating study plan...', 'loading');
+                const response = await fetch('/study-plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subject, topics, deadline })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    addMessage(result.plan, 'assistant');
+                    showStatus('Study plan generated!', 'success');
+                    // Clear form
+                    document.getElementById('studySubject').value = '';
+                    document.getElementById('studyTopics').value = '';
+                    document.getElementById('studyDeadline').value = '';
+                } else {
+                    showStatus(`Error: ${result.detail}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function getAssignmentHelp() {
+            const description = document.getElementById('assignmentDescription').value.trim();
+            const requirements = document.getElementById('assignmentRequirements').value.trim();
+            
+            if (!description) {
+                showStatus('Please describe your assignment', 'error');
+                return;
+            }
+            
+            try {
+                showStatus('Getting assignment help...', 'loading');
+                const response = await fetch('/assignment-help', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assignment_description: description, requirements })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    addMessage(result.help, 'assistant');
+                    showStatus('Assignment help generated!', 'success');
+                    // Clear form
+                    document.getElementById('assignmentDescription').value = '';
+                    document.getElementById('assignmentRequirements').value = '';
+                } else {
+                    showStatus(`Error: ${result.detail}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function explainConcept() {
+            const concept = document.getElementById('conceptToExplain').value.trim();
+            
+            if (!concept) {
+                showStatus('Please enter a concept to explain', 'error');
+                return;
+            }
+            
+            try {
+                showStatus('Explaining concept...', 'loading');
+                const response = await fetch('/explain-concept', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ concept, use_context: true })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    addMessage(result.explanation, 'assistant');
+                    showStatus(`Concept explained! ${result.context_used ? '(Used your documents)' : ''}`, 'success');
+                    // Clear form
+                    document.getElementById('conceptToExplain').value = '';
+                } else {
+                    showStatus(`Error: ${result.detail}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function summarizeText() {
+            const text = document.getElementById('textToSummarize').value.trim();
+            
+            if (!text) {
+                showStatus('Please enter text to summarize', 'error');
+                return;
+            }
+            
+            try {
+                showStatus('Summarizing text...', 'loading');
+                const response = await fetch('/summarize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, max_length: 500 })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    addMessage(`**Summary:**\n${result.summary}\n\n*Original: ${result.original_length} chars → Summary: ${result.summary_length} chars*`, 'assistant');
+                    showStatus('Text summarized!', 'success');
+                    // Clear form
+                    document.getElementById('textToSummarize').value = '';
+                } else {
+                    showStatus(`Error: ${result.detail}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

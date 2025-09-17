@@ -1,3 +1,11 @@
+## About Me
+
+- Name: Yuvraj Kumar
+- Department: Civil
+- University: IIT Jodhpur
+
+---
+
 # AI Class Notes Assistant
 
 A lightweight, production-ready AI assistant for managing and chatting with your class notes and documents. Built with FastAPI, OpenAI, and local storage for easy deployment.

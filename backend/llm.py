@@ -64,8 +64,8 @@ class SimpleLLMInterface:
         Deadline: {deadline}
         
         Please provide:
-        1. A weekly breakdown
-        2. Specific study goals for each week
+        1. A timely breakdown
+        2. Specific study goals for each time unit
         3. Recommended study methods
         4. Time allocation suggestions
         """

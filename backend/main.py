@@ -82,8 +82,14 @@ class ConceptExplanationRequest(BaseModel):
 # Routes
 @app.get("/")
 async def root():
-    """Serve the main frontend page."""
+    """Serve the home page."""
+    return FileResponse("static/home.html")
+
+@app.get("/app")
+async def serve_app():
+    """Serve the main application page."""
     return FileResponse("static/index.html")
+
 
 @app.get("/api/info")
 async def api_info():
@@ -488,7 +494,7 @@ async def get_generated_content():
         raise HTTPException(status_code=500, detail=str(e))
 
 # Serve static files (frontend)
-app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":
     logger.info("Starting AI Class Notes Assistant (Simple Version)")

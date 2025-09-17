@@ -583,11 +583,13 @@
         .chat-container {
             display: flex;
             flex-direction: column;
+            min-height: 400px;
             height: 100%;
+            position: relative;
         }
 
         .messages {
-            flex: 1;
+            flex: 1 1 auto;
             background: #ffffff;
             border-radius: 16px;
             margin-bottom: 1rem;
@@ -595,6 +597,7 @@
             border: 1px solid rgba(59, 130, 246, 0.1);
             display: flex;
             flex-direction: column;
+            min-height: 0;
         }
 
         .message {
@@ -706,6 +709,9 @@
             border-radius: 16px;
             padding: 0.75rem;
             transition: all 0.3s ease;
+            position: sticky;
+            bottom: 0;
+            z-index: 2;
         }
 
         .chat-input-container:focus-within {
@@ -987,9 +993,9 @@
             AI Notes Assistant
         </div>
         <div class="nav-links">
-            <a href="static/home.html" class="nav-link">Home</a>
-            <a href="static/features.html" class="nav-link">Features</a>
-            <a href="static/about.html" class="nav-link">About</a>
+            <a href="/static/home.html" class="nav-link">Home</a>
+            <a href="/static/features.html" class="nav-link">Features</a>
+            <a href="/static/about.html" class="nav-link">About</a>
         </div>
         <button class="enter-btn glow-effect" onclick="window.location.href='index.html'">Dashboard</button>
     </nav>

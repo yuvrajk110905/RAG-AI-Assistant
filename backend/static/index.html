@@ -1,424 +1,1155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Class Notes Assistant</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Notes Assistant Dashboard</title>
     <style>
-        /* GitHub Markdown CSS (minimal, for .markdown-body) */
-        .markdown-body {
-            font-family: inherit;
-            font-size: 1rem;
-            color: #24292f;
-            line-height: 1.6;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --accent-light: #67e8f9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 20px 40px -4px rgba(0, 0, 0, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+            --navbar-height: 80px;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --input-bg: #f1f5f9;
+            --input-border: #cbd5e1;
+            --text-color: #334155;
         }
-        .markdown-body h1,
-        .markdown-body h2,
-        .markdown-body h3 {
-            font-weight: 600;
-            margin-top: 1em;
-            margin-bottom: 0.5em;
-        }
-        .markdown-body h1 { font-size: 1.5em; }
-        .markdown-body h2 { font-size: 1.25em; }
-        .markdown-body h3 { font-size: 1.1em; }
-        .markdown-body ul,
-        .markdown-body ol {
-            margin: 0.5em 0 0.5em 1.5em;
-        }
-        .markdown-body code {
-            background: #f6f8fa;
-            color: #e83e8c;
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-size: 0.95em;
-        }
-        .markdown-body pre {
-            background: #f6f8fa;
-            padding: 12px;
-            border-radius: 6px;
-            overflow-x: auto;
-            margin: 0.5em 0;
-        }
-        .markdown-body blockquote {
-            border-left: 4px solid #d0d7de;
-            color: #6a737d;
-            padding: 0.5em 1em;
-            margin: 0.5em 0;
-            background: #f6f8fa;
-            border-radius: 4px;
-        }
-        .markdown-body table {
-            border-collapse: collapse;
-            margin: 0.5em 0;
-        }
-        .markdown-body th,
-        .markdown-body td {
-            border: 1px solid #d0d7de;
-            padding: 6px 13px;
-        }
-        .markdown-body a {
-            color: #0969da;
-            text-decoration: underline;
-        }
-        .markdown-body img {
-            max-width: 100%;
-        }
-    
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+
+        body, html {
+            height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
             overflow: hidden;
         }
-        
-        .header {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float-particles 20s infinite linear;
+        }
+
+        .particle:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 120px; height: 120px; left: 20%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 60px; height: 60px; left: 35%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 100px; height: 100px; left: 50%; animation-delay: 6s; }
+        .particle:nth-child(5) { width: 90px; height: 90px; left: 70%; animation-delay: 8s; }
+        .particle:nth-child(6) { width: 110px; height: 110px; left: 85%; animation-delay: 10s; }
+
+        @keyframes float-particles {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Navbar */
+        .navbar {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .navbar:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
             color: white;
-            padding: 30px;
-            text-align: center;
+            user-select: none;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+
+        .logo-emoji {
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
         }
-        
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(5deg); }
         }
-        
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .enter-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .enter-btn:hover::before {
+            left: 100%;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.6);
+            background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+        }
+
+        /* Main Container */
+        .dashboard-bg {
+            height: calc(100vh - var(--navbar-height));
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            height: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 2rem 2rem 1.5rem 2rem;
+            animation: slideUp 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            border-radius: 24px 24px 0 0;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 0;
-            min-height: 600px;
+            gap: 2rem;
+            flex: 1;
+            overflow: hidden;
         }
-        
-        .upload-section {
-            padding: 40px;
-            border-right: 1px solid #e5e7eb;
+
+        @media (max-width: 1050px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
         }
-        
-        .agents-section {
-            padding: 40px;
-            border-right: 1px solid #e5e7eb;
-        }
-        
-        .chat-section {
-            padding: 40px;
+
+        /* Card Sections */
+        .card-section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
-        
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #374151;
+
+        .card-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
-        
+
+        .card-section:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-section:hover {
+            box-shadow: var(--shadow-hover);
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .section-title::before {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Upload Section */
         .upload-area {
-            border: 2px dashed #d1d5db;
-            border-radius: 10px;
-            padding: 40px 20px;
+            border: 3px dashed var(--primary-light);
+            border-radius: 16px;
+            padding: 2rem 1rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+            transition: all 0.4s ease;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(59, 130, 246, 0.1), transparent);
+            animation: rotate 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .upload-area:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .upload-area:hover {
-            border-color: #6366f1;
-            background-color: #f8fafc;
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
         }
-        
+
         .upload-area.dragover {
-            border-color: #4f46e5;
-            background-color: #eef2ff;
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(103, 232, 249, 0.15));
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(6, 182, 212, 0.3);
         }
-        
+
         .upload-icon {
-            font-size: 3rem;
-            color: #9ca3af;
-            margin-bottom: 15px;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: bounce 2s infinite;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
         }
-        
-        .file-input {
-            display: none;
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
         }
-        
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+        .upload-text {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
             font-size: 1rem;
         }
-        
+
+        .upload-subtext {
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
         }
-        
+
         .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.6);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
         }
-        
+
         .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            color: var(--primary);
+            border: 2px solid var(--primary-light);
+            backdrop-filter: blur(10px);
         }
-        
+
         .btn-secondary:hover {
-            background: #e5e7eb;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
         }
-        
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group h3 {
+            color: var(--dark);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--dark);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* File List */
         .file-list {
-            margin-top: 20px;
+            flex: 1;
+            overflow-y: auto;
+            min-height: 200px;
+            padding: 0.25rem 0;
         }
-        
+
         .file-item {
-            background: #f9fafb;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+            padding: 0.75rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            backdrop-filter: blur(5px);
         }
-        
+
+        .file-item:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+        }
+
+        .file-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .file-date {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Chat Section - Enhanced */
         .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .messages {
             flex: 1;
+            background: #ffffff;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            overflow-y: auto;
+            border: 1px solid rgba(59, 130, 246, 0.1);
             display: flex;
             flex-direction: column;
         }
-        
-        .messages {
-            flex: 1;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            overflow-y: auto;
-            max-height: 400px;
-            background: #fafafa;
-        }
-        
+
         .message {
-            margin-bottom: 15px;
-            padding: 12px 16px;
-            border-radius: 10px;
-            max-width: 80%;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.05);
+            animation: messageSlide 0.4s ease-out;
+            position: relative;
+            word-wrap: break-word;
+            white-space: pre-line;
+            line-height: 1.5;
         }
-        
+
+        .message:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .message.user {
-            background: #e0e7ff;
-            margin-left: auto;
-            text-align: right;
+            background: rgba(59, 130, 246, 0.03);
+            border-left: 4px solid var(--primary);
         }
-        
+
         .message.assistant {
-            background: #f0f9ff;
-            margin-right: auto;
+            background: #ffffff;
         }
-        
-        .chat-input-container {
+
+        .message.assistant.typing {
+            background: rgba(6, 182, 212, 0.02);
+        }
+
+        .message-header {
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
-        
+
+        .message-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .user-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .assistant-avatar {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+        }
+
+        .message-content {
+            color: var(--dark);
+            font-size: 0.9rem;
+            margin-left: 2rem;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: typingDot 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .chat-input-container {
+            background: #ffffff;
+            border: 2px solid rgba(59, 130, 246, 0.1);
+            border-radius: 16px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-container:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
         .chat-input {
             flex: 1;
-            padding: 15px;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            font-size: 1rem;
+            border: none;
+            background: transparent;
+            color: var(--dark);
             resize: none;
-        }
-        
-        .status {
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
+            min-height: 20px;
+            max-height: 120px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            transition: all 0.3s ease;
             font-weight: 500;
         }
-        
+
+        .chat-input:focus {
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .send-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Status Messages */
+        .status {
+            margin: 1rem 0;
+            padding: 0.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+            animation: statusSlide 0.4s ease-out;
+            backdrop-filter: blur(10px);
+            font-size: 0.85rem;
+        }
+
+        @keyframes statusSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         .status.success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+            color: #047857;
+            border: 2px solid rgba(16, 185, 129, 0.3);
         }
-        
+
         .status.error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fca5a5;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(248, 113, 113, 0.1));
+            color: #dc2626;
+            border: 2px solid rgba(239, 68, 68, 0.3);
         }
-        
+
         .status.loading {
-            background: #dbeafe;
-            color: #1e40af;
-            border: 1px solid #93c5fd;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            color: var(--primary);
+            border: 2px solid rgba(59, 130, 246, 0.3);
         }
-        
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 0.5);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--primary-hover), var(--secondary));
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+            .chat-section {
+                grid-column: span 2;
+            }
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+                overflow-y: auto;
             }
-            
-            .upload-section, .agents-section {
-                border-right: none;
-                border-bottom: 1px solid #e5e7eb;
+            .dashboard-bg {
+                padding: 1rem;
             }
+            .container {
+                padding: 1.5rem;
+            }
+            .navbar {
+                padding: 0 1rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .logo {
+                font-size: 1.3rem;
+            }
+            .chat-section {
+                grid-column: span 1;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .message {
+                padding: 0.75rem 1rem;
+            }
+            .message-content {
+                margin-left: 1.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 1.1rem;
+            }
+            .upload-area {
+                padding: 1.5rem 0.75rem;
+            }
+            .upload-icon {
+                font-size: 2rem;
+            }
+        }
+
+        /* Hide file input */
+        .file-input {
+            display: none;
+        }
+
+        /* Markdown styling */
+        .markdown-body {
+            color: inherit;
+        }
+
+        .markdown-body code {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .markdown-body pre {
+            background: rgba(59, 130, 246, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            background: rgba(6, 182, 212, 0.05);
+            border-radius: 8px;
+            padding: 0.75rem 0 0.75rem 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Glow effect for important elements */
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 1;
+        }
+
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .empty-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* AI Agents Section Improvements */
+        .agents-section {
+            overflow-y: auto;
+        }
+
+        .agents-section .form-group:last-child {
+            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🤖 AI Class Notes Assistant</h1>
-            <p>Upload your documents and chat with your knowledge base</p>
+    <div class="bg-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-emoji">🤖</span>
+            AI Notes Assistant
         </div>
-        
-        <div class="main-content">
-            <div class="upload-section">
-                <h2 class="section-title">📁 Upload Documents</h2>
-                
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📄</div>
-                    <p><strong>Drop files here</strong> or <span style="color: #6366f1;">browse</span></p>
-                    <p style="font-size: 0.9rem; color: #6b7280; margin-top: 10px;">
-                        Supports PDF, TXT, and DOCX files (max 10MB)
-                    </p>
-                </div>
-                
-                <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.txt,.docx">
-                
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-primary" onclick="selectFiles()">Choose Files</button>
-                    <button class="btn btn-secondary" onclick="loadDocuments()">Refresh List</button>
-                </div>
-                
-                <div id="status"></div>
-                <div id="fileList" class="file-list"></div>
-            </div>
-            
-            <div class="agents-section">
-                <h2 class="section-title">🤖 AI Agents</h2>
-                
-                <div style="margin-bottom: 20px;">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">📚 Study Planner</h3>
-                    <input type="text" id="studySubject" placeholder="Subject (e.g., Mathematics)" style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;">
-                    <input type="text" id="studyTopics" placeholder="Topics (comma-separated)" style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;">
-                    <input type="text" id="studyDeadline" placeholder="Deadline (e.g., 2 weeks)" style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;">
-                    <button class="btn btn-primary" onclick="generateStudyPlan()" style="width: 100%;">Generate Study Plan</button>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">📝 Assignment Helper</h3>
-                    <textarea id="assignmentDescription" placeholder="Describe your assignment..." style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;" rows="3"></textarea>
-                    <textarea id="assignmentRequirements" placeholder="Requirements (optional)..." style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;" rows="2"></textarea>
-                    <button class="btn btn-primary" onclick="getAssignmentHelp()" style="width: 100%;">Get Assignment Help</button>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">🧠 Concept Explainer</h3>
-                    <input type="text" id="conceptToExplain" placeholder="Enter concept to explain..." style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;">
-                    <button class="btn btn-primary" onclick="explainConcept()" style="width: 100%;">Explain Concept</button>
-                </div>
-                
-                <div>
-                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">📄 Text Summarizer</h3>
-                    <textarea id="textToSummarize" placeholder="Paste text to summarize..." style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 5px;" rows="4"></textarea>
-                    <button class="btn btn-primary" onclick="summarizeText()" style="width: 100%;">Summarize Text</button>
-                </div>
-            </div>
-            
-            <div class="chat-section">
-                <h2 class="section-title">💬 Chat with Your Notes</h2>
-                
-                <div class="chat-container">
-                    <div id="messages" class="messages">
-                        <div class="message assistant">
-                            <strong>AI Assistant:</strong> Hi! I'm ready to help you with your class notes. Upload some documents and ask me questions about them!
-                        </div>
+        <div class="nav-links">
+            <a href="static/home.html" class="nav-link">Home</a>
+            <a href="static/features.html" class="nav-link">Features</a>
+            <a href="static/about.html" class="nav-link">About</a>
+        </div>
+        <button class="enter-btn glow-effect" onclick="window.location.href='index.html'">Dashboard</button>
+    </nav>
+
+    <div class="dashboard-bg">
+        <div class="container">
+            <div class="main-content">
+                <div class="card-section upload-section">
+                    <h2 class="section-title">📁 Upload Documents</h2>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">📄</div>
+                        <p class="upload-text">Drop files here or browse</p>
+                        <p class="upload-subtext">Supports PDF, TXT, and DOCX files (max 10MB)</p>
                     </div>
-                    
-                    <div class="chat-input-container">
-                        <textarea id="messageInput" class="chat-input" placeholder="Ask a question about your documents..." rows="3"></textarea>
-                        <button class="btn btn-primary" onclick="sendMessage()" style="height: fit-content;">Send</button>
+                    <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.txt,.docx" />
+                    <div class="button-group">
+                        <button class="btn btn-primary glow-effect" onclick="selectFiles()">Choose Files</button>
+                        <button class="btn btn-secondary" onclick="refreshDocuments()" id="refreshBtn">
+                            <span class="refresh-text">Refresh List</span>
+                        </button>
+                    </div>
+                    <div id="status"></div>
+                    <div id="fileList" class="file-list"></div>
+                </div>
+
+                <div class="card-section agents-section">
+                    <h2 class="section-title">💡 AI Agents</h2>
+                    <div class="form-group">
+                        <h3>📚 Study Planner</h3>
+                        <input type="text" id="studySubject" class="form-input" placeholder="Subject (e.g., Mathematics)" />
+                        <input type="text" id="studyTopics" class="form-input" placeholder="Topics (comma-separated)" />
+                        <input type="text" id="studyDeadline" class="form-input" placeholder="Deadline (e.g., 2 weeks, 2 hours)" />
+                        <button class="btn btn-primary glow-effect" onclick="generateStudyPlan()" style="width: 100%">
+                            Generate Study Plan
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <h3>📝 Assignment Helper</h3>
+                        <textarea id="assignmentDescription" class="form-textarea" placeholder="Describe your assignment..." rows="2"></textarea>
+                        <textarea id="assignmentRequirements" class="form-textarea" placeholder="Requirements (optional)..." rows="2"></textarea>
+                        <button class="btn btn-primary glow-effect" onclick="getAssignmentHelp()" style="width: 100%">
+                            Get Assignment Help
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <h3>🧠 Concept Explainer</h3>
+                        <input type="text" id="conceptToExplain" class="form-input" placeholder="Enter concept to explain..." />
+                        <button class="btn btn-primary glow-effect" onclick="explainConcept()" style="width: 100%">
+                            Explain Concept
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <h3>📄 Text Summarizer</h3>
+                        <textarea id="textToSummarize" class="form-textarea" placeholder="Paste text to summarize..." rows="2"></textarea>
+                        <button class="btn btn-primary glow-effect" onclick="summarizeText()" style="width: 100%">
+                            Summarize Text
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-section chat-section">
+                    <h2 class="section-title">💬 Chat with Your Notes</h2>
+                    <div class="chat-container">
+                        <div id="messages" class="messages">
+                            <div class="message assistant">
+                                <div class="message-header">
+                                    <div class="message-avatar assistant-avatar">🤖</div>
+                                    <span>AI Assistant</span>
+                                </div>
+                                <div class="message-content">Hi! I'm ready to help you with your class notes. Upload some documents and ask me questions about them!</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <div class="chat-input-wrapper">
+                                <textarea
+                                    id="messageInput"
+                                    class="chat-input"
+                                    placeholder="Ask a question about your documents..."
+                                    rows="1"
+                                ></textarea>
+                                <button class="send-button" onclick="sendMessage()" id="sendBtn">
+                                    ➤
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Load marked.js for Markdown rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        const API_BASE = '/api';
-        
-        // File upload functionality
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const fileList = document.getElementById('fileList');
         const status = document.getElementById('status');
         const messages = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
 
-        // Drag and drop handlers
+        let isLoading = false;
+        let documents = [];
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
         });
-
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.classList.remove('dragover');
         });
-
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
             const files = e.dataTransfer.files;
             handleFiles(files);
         });
-
-        uploadArea.addEventListener('click', selectFiles);
+        uploadArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
         function selectFiles() {
             fileInput.click();
         }
 
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-
         function showStatus(message, type) {
             status.innerHTML = `<div class="status ${type}">${message}</div>`;
             setTimeout(() => {
                 status.innerHTML = '';
-            }, 5000);
+            }, 4000);
+        }
+
+        function setButtonLoading(button, loading, originalText) {
+            if (loading) {
+                button.disabled = true;
+                button.innerHTML = `<span class="btn-icon">⟳</span> Loading...`;
+            } else {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }
+        }
+
+        async function refreshDocuments() {
+            const originalText = refreshBtn.innerHTML;
+            setButtonLoading(refreshBtn, true, originalText);
+            
+            try {
+                await loadDocuments();
+                showStatus('Document list refreshed!', 'success');
+            } catch (error) {
+                showStatus(`Error refreshing documents: ${error.message}`, 'error');
+            } finally {
+                setButtonLoading(refreshBtn, false, '<span class="refresh-text">Refresh List</span>');
+            }
         }
 
         async function handleFiles(files) {
@@ -427,23 +1158,15 @@
                     showStatus(`File ${file.name} is too large (max 10MB)`, 'error');
                     continue;
                 }
-
                 const formData = new FormData();
                 formData.append('file', file);
-
                 try {
                     showStatus(`Uploading ${file.name}...`, 'loading');
-                    
-                    const response = await fetch('/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
-
+                    const response = await fetch('/upload', { method: 'POST', body: formData });
                     const result = await response.json();
-                    
                     if (response.ok) {
                         showStatus(`Successfully uploaded ${file.name}`, 'success');
-                        loadDocuments();
+                        await loadDocuments();
                     } else {
                         showStatus(`Error uploading ${file.name}: ${result.detail}`, 'error');
                     }
@@ -456,68 +1179,151 @@
         async function loadDocuments() {
             try {
                 const response = await fetch('/documents');
-                const documents = await response.json();
-                
-                fileList.innerHTML = '';
-                documents.forEach(doc => {
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'file-item';
-                    fileItem.innerHTML = `
-                        <span>📄 ${doc.filename}</span>
-                        <span style="font-size: 0.9rem; color: #6b7280;">${new Date(doc.uploaded_at).toLocaleDateString()}</span>
-                    `;
-                    fileList.appendChild(fileItem);
-                });
-            } catch (error) {
-                console.error('Error loading documents:', error);
+                const data = await response.json();
+                documents = data.documents || [];
+                renderFileList();
+            } catch (err) {
+                console.error('Failed to fetch documents', err);
+                renderFileList(); // Show empty state
             }
         }
 
-        // Chat functionality
+        function renderFileList() {
+            fileList.innerHTML = '';
+            
+            if (documents.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <div class="empty-state-icon">📁</div>
+                    <p>No documents uploaded yet</p>
+                    <p style="font-size: 0.75rem; margin-top: 0.5rem;">Upload your first document to get started</p>
+                `;
+                fileList.appendChild(emptyState);
+                return;
+            }
+
+            // Sort documents by date (newest first)
+            const sortedDocs = [...documents].sort((a, b) => {
+                const dateA = new Date(a.created_at || a.uploaded_at || 0);
+                const dateB = new Date(b.created_at || b.uploaded_at || 0);
+                return dateB - dateA;
+            });
+
+            for (const doc of sortedDocs) {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                const dateString = new Date(doc.created_at || doc.uploaded_at).toLocaleDateString();
+                div.innerHTML = `
+                    <div class="file-info">
+                        <span class="file-name">📄 ${doc.filename}</span>
+                        <span class="file-date">${dateString}</span>
+                    </div>
+                `;
+                fileList.appendChild(div);
+            }
+        }
+
+        function addTypingIndicator() {
+            const div = document.createElement('div');
+            div.className = 'message assistant typing';
+            div.id = 'typing-indicator';
+            div.innerHTML = `
+                <div class="message-header">
+                    <div class="message-avatar assistant-avatar">🤖</div>
+                    <span>AI Assistant</span>
+                </div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <span>Thinking</span>
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+            return div;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
         async function sendMessage() {
             const message = messageInput.value.trim();
-            if (!message) return;
+            if (!message || isLoading) return;
 
-            // Add user message to chat
+            isLoading = true;
             addMessage(message, 'user');
             messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '⟳';
+            sendBtn.style.animation = 'spin 1s linear infinite';
+
+            const typingIndicator = addTypingIndicator();
 
             try {
                 const response = await fetch('/chat', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ message: message, use_context: true })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, use_context: true }),
                 });
-
                 const result = await response.json();
+                
+                removeTypingIndicator();
                 
                 if (response.ok) {
                     addMessage(result.response, 'assistant');
                 } else {
                     addMessage(`Error: ${result.detail || result.message || 'Unknown error'}`, 'assistant');
                 }
-            } catch (error) {
-                console.error('Chat error:', error);
-                addMessage(`Error: ${error.message}`, 'assistant');
+            } catch (err) {
+                removeTypingIndicator();
+                addMessage(`Error: ${err.message}`, 'assistant');
+                console.error('Chat error:', err);
+            } finally {
+                isLoading = false;
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '➤';
+                sendBtn.style.animation = '';
             }
         }
 
         function addMessage(content, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            
             if (sender === 'assistant') {
-                // Render Markdown for assistant messages
-                messageDiv.innerHTML = `<strong>AI Assistant:</strong> <span class="markdown-body">${marked.parse(content)}</span>`;
+                div.innerHTML = `
+                    <div class="message-header">
+                        <div class="message-avatar assistant-avatar">🤖</div>
+                        <span>AI Assistant</span>
+                    </div>
+                    <div class="message-content markdown-body">${marked.parse(content)}</div>
+                `;
             } else {
-                messageDiv.innerHTML = `<strong>You:</strong> ${content}`;
+                div.innerHTML = `
+                    <div class="message-header">
+                        <div class="message-avatar user-avatar">👤</div>
+                        <span>You</span>
+                    </div>
+                    <div class="message-content">${content}</div>
+                `;
             }
-            messages.appendChild(messageDiv);
+            
+            messages.appendChild(div);
             messages.scrollTop = messages.scrollHeight;
         }
 
-        // Handle Enter key in textarea
         messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -525,137 +1331,127 @@
             }
         });
 
-        // Load documents on page load
-        loadDocuments();
-
-        // AI Agent Functions
         async function generateStudyPlan() {
             const subject = document.getElementById('studySubject').value.trim();
-            const topicsText = document.getElementById('studyTopics').value.trim();
+            const topicsRaw = document.getElementById('studyTopics').value.trim();
             const deadline = document.getElementById('studyDeadline').value.trim();
-            
+
             if (!subject || !deadline) {
-                showStatus('Please fill in at least subject and deadline', 'error');
+                showStatus('Please fill in the subject and deadline', 'error');
                 return;
             }
-            
-            const topics = topicsText ? topicsText.split(',').map(t => t.trim()) : [];
-            
+            const topics = topicsRaw ? topicsRaw.split(',').map(t => t.trim()) : [];
+
             try {
                 showStatus('Generating study plan...', 'loading');
                 const response = await fetch('/study-plan', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ subject, topics, deadline })
+                    body: JSON.stringify({ subject, topics, deadline }),
                 });
-                
                 const result = await response.json();
                 if (response.ok) {
                     addMessage(result.plan, 'assistant');
                     showStatus('Study plan generated!', 'success');
-                    // Clear form
                     document.getElementById('studySubject').value = '';
                     document.getElementById('studyTopics').value = '';
                     document.getElementById('studyDeadline').value = '';
                 } else {
                     showStatus(`Error: ${result.detail}`, 'error');
                 }
-            } catch (error) {
-                showStatus(`Error: ${error.message}`, 'error');
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
             }
         }
 
         async function getAssignmentHelp() {
             const description = document.getElementById('assignmentDescription').value.trim();
             const requirements = document.getElementById('assignmentRequirements').value.trim();
-            
+
             if (!description) {
                 showStatus('Please describe your assignment', 'error');
                 return;
             }
-            
+
             try {
                 showStatus('Getting assignment help...', 'loading');
                 const response = await fetch('/assignment-help', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ assignment_description: description, requirements })
+                    body: JSON.stringify({ assignment_description: description, requirements }),
                 });
-                
                 const result = await response.json();
                 if (response.ok) {
                     addMessage(result.help, 'assistant');
                     showStatus('Assignment help generated!', 'success');
-                    // Clear form
                     document.getElementById('assignmentDescription').value = '';
                     document.getElementById('assignmentRequirements').value = '';
                 } else {
                     showStatus(`Error: ${result.detail}`, 'error');
                 }
-            } catch (error) {
-                showStatus(`Error: ${error.message}`, 'error');
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
             }
         }
 
         async function explainConcept() {
             const concept = document.getElementById('conceptToExplain').value.trim();
-            
+
             if (!concept) {
-                showStatus('Please enter a concept to explain', 'error');
+                showStatus('Please enter a concept', 'error');
                 return;
             }
-            
+
             try {
                 showStatus('Explaining concept...', 'loading');
                 const response = await fetch('/explain-concept', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ concept, use_context: true })
+                    body: JSON.stringify({ concept, use_context: true }),
                 });
-                
                 const result = await response.json();
                 if (response.ok) {
                     addMessage(result.explanation, 'assistant');
-                    showStatus(`Concept explained! ${result.context_used ? '(Used your documents)' : ''}`, 'success');
-                    // Clear form
+                    showStatus('Concept explained!', 'success');
                     document.getElementById('conceptToExplain').value = '';
                 } else {
                     showStatus(`Error: ${result.detail}`, 'error');
                 }
-            } catch (error) {
-                showStatus(`Error: ${error.message}`, 'error');
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
             }
         }
 
         async function summarizeText() {
             const text = document.getElementById('textToSummarize').value.trim();
-            
+
             if (!text) {
-                showStatus('Please enter text to summarize', 'error');
+                showStatus('Please paste text to summarize', 'error');
                 return;
             }
-            
+
             try {
-                showStatus('Summarizing text...', 'loading');
+                showStatus('Summarizing...', 'loading');
                 const response = await fetch('/summarize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text, max_length: 500 })
+                    body: JSON.stringify({ text, max_length: 500 }),
                 });
-                
                 const result = await response.json();
                 if (response.ok) {
                     addMessage(`**Summary:**\n${result.summary}\n\n*Original: ${result.original_length} chars → Summary: ${result.summary_length} chars*`, 'assistant');
-                    showStatus('Text summarized!', 'success');
-                    // Clear form
+                    showStatus('Summary generated!', 'success');
                     document.getElementById('textToSummarize').value = '';
                 } else {
                     showStatus(`Error: ${result.detail}`, 'error');
                 }
-            } catch (error) {
-                showStatus(`Error: ${error.message}`, 'error');
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
             }
         }
+
+        // Initialize documents list on page load
+        loadDocuments();
     </script>
 </body>
 </html>

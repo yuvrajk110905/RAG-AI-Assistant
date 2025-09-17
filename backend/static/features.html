@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - AI Notes Assistant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --navbar-height: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        /* Navbar */
+        .navbar {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.12);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .logo-emoji {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .enter-app-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .enter-app-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.6);
+        }
+
+        /* Page Content */
+        .page-header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .features-container {
+            padding: 40px 20px 80px;
+            background: rgba(255, 255, 255, 0.97);
+            color: #374151;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .features-detailed {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 60px;
+        }
+
+        .feature-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-section:nth-child(even) {
+            direction: rtl;
+        }
+
+        .feature-section:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .feature-content h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .feature-content p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .feature-list li::before {
+            content: "✅";
+            font-size: 1.2rem;
+        }
+
+        .feature-visual {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .feature-visual-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-visual h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 18px 40px;
+            border-radius: 14px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .feature-section {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 30px 20px;
+            }
+
+            .feature-section:nth-child(even) {
+                direction: ltr;
+            }
+
+            .feature-content h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-emoji">🤖</span>
+            AI Assistant
+        </div>
+        <ul class="nav-links">
+            <li><a href="home.html" class="nav-link">Home</a></li>
+            <li><a href="features.html" class="nav-link active">Features</a></li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+        </ul>
+        <button class="enter-app-btn" onclick="location.href='/app'">Dashboard</button>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>Powerful Features</h1>
+        <p>Discover all the ways AI Notes Assistant can transform your studying experience with intelligent document processing and personalized learning tools.</p>
+    </section>
+
+    <!-- Detailed Features -->
+    <section class="features-container">
+        <div class="features-detailed">
+            
+            <!-- Document Upload Feature -->
+            <div class="feature-section">
+                <div class="feature-content">
+                    <h2>📁 Smart Document Processing</h2>
+                    <p>Upload any document and let our AI extract, process, and organize the content for optimal studying. Support for multiple file formats with intelligent text recognition.</p>
+                    <ul class="feature-list">
+                        <li>PDF, Word, PowerPoint support</li>
+                        <li>OCR for scanned documents</li>
+                        <li>Automatic text chunking</li>
+                        <li>Duplicate detection</li>
+                        <li>Subject categorization</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="feature-visual-icon">📄</div>
+                    <h3>Instant Processing</h3>
+                </div>
+            </div>
+
+            <!-- AI Chat Feature -->
+            <div class="feature-section">
+                <div class="feature-content">
+                    <h2>💬 Intelligent Q&A Chat</h2>
+                    <p>Ask questions about your uploaded materials and get detailed, contextual answers. The AI understands your documents and provides relevant explanations.</p>
+                    <ul class="feature-list">
+                        <li>Context-aware responses</li>
+                        <li>Natural language queries</li>
+                        <li>Source citations</li>
+                        <li>Follow-up questions</li>
+                        <li>Chat history tracking</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="feature-visual-icon">🤖</div>
+                    <h3>Smart Conversations</h3>
+                </div>
+            </div>
+
+            <!-- Study Plans Feature -->
+            <div class="feature-section">
+                <div class="feature-content">
+                    <h2>📊 Personalized Study Plans</h2>
+                    <p>Generate comprehensive study schedules tailored to your subjects, deadlines, and learning goals. Get structured timelines with actionable tasks.</p>
+                    <ul class="feature-list">
+                        <li>Custom timeline creation</li>
+                        <li>Topic prioritization</li>
+                        <li>Progress tracking</li>
+                        <li>Deadline management</li>
+                        <li>Study method suggestions</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="feature-visual-icon">📅</div>
+                    <h3>Organized Learning</h3>
+                </div>
+            </div>
+
+            <!-- Assignment Help Feature -->
+            <div class="feature-section">
+                <div class="feature-content">
+                    <h2>✍️ Assignment Assistance</h2>
+                    <p>Get structured help with essays, projects, and assignments. Receive outlines, research directions, and quality improvement suggestions.</p>
+                    <ul class="feature-list">
+                        <li>Assignment analysis</li>
+                        <li>Outline generation</li>
+                        <li>Research guidance</li>
+                        <li>Quality checklists</li>
+                        <li>Writing improvement tips</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="feature-visual-icon">📝</div>
+                    <h3>Academic Support</h3>
+                </div>
+            </div>
+
+            <!-- Concept Explanation Feature -->
+            <div class="feature-section">
+                <div class="feature-content">
+                    <h2>🧠 Concept Explanations</h2>
+                    <p>Get clear, detailed explanations of complex concepts with examples, context, and connections to your study materials.</p>
+                    <ul class="feature-list">
+                        <li>Multi-level explanations</li>
+                        <li>Real-world examples</li>
+                        <li>Visual analogies</li>
+                        <li>Related concept links</li>
+                        <li>Memory techniques</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="feature-visual-icon">💡</div>
+                    <h3>Deep Understanding</h3>
+                </div>
+            </div>
+
+            <!-- Search Feature -->
+            <div class="feature-section">
+                <div class="feature-content">
+                    <h2>🔍 Advanced Search</h2>
+                    <p>Find information across all your documents instantly with intelligent search that understands context and meaning, not just keywords.</p>
+                    <ul class="feature-list">
+                        <li>Semantic search</li>
+                        <li>Cross-document queries</li>
+                        <li>Relevance ranking</li>
+                        <li>Quick previews</li>
+                        <li>Filter by subject/type</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="feature-visual-icon">🎯</div>
+                    <h3>Smart Discovery</h3>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <h2>Ready to Transform Your Study Experience?</h2>
+        <p>Join thousands of students who are already studying smarter with AI Notes Assistant. Get started today and see the difference intelligent learning tools can make.</p>
+        <button class="cta-btn" onclick="location.href='/app'">Start Using AI Notes Assistant</button>
+    </section>
+</body>
+</html>

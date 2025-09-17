@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - AI Notes Assistant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --navbar-height: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        /* Navbar */
+        .navbar {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.12);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .logo-emoji {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .enter-app-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .enter-app-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.6);
+        }
+
+        /* Page Content */
+        .page-header {
+            text-align: center;
+            padding: 80px 20px 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .about-container {
+            padding: 40px 20px 80px;
+            background: rgba(255, 255, 255, 0.97);
+            color: #374151;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .mission-section {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .mission-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: var(--dark);
+        }
+
+        .mission-section p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .value-card {
+            background: white;
+            padding: 30px 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .value-card p {
+            color: #6b7280;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .team-section {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .team-section h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+
+        .team-section p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .contact-info {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .contact-info h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .contact-info p {
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .contact-info a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .mission-section,
+            .stats-section,
+            .team-section {
+                padding: 30px 25px;
+            }
+
+            .mission-section h2 {
+                font-size: 2rem;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+
+            .stat-item h3 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-emoji">🤖</span>
+            AI Assistant
+        </div>
+        <ul class="nav-links">
+            <li><a href="home.html" class="nav-link">Home</a></li>
+            <li><a href="features.html" class="nav-link">Features</a></li>
+            <li><a href="about.html" class="nav-link active">About</a></li>
+        </ul>
+        <button class="enter-app-btn" onclick="location.href='/app'">Dashboard</button>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>About Us</h1>
+        <p>Learn more about our mission to make studying smarter and more effective for students everywhere.</p>
+    </section>
+
+    <!-- About Content -->
+    <section class="about-container">
+        <div class="about-content">
+            
+            <!-- Mission Section -->
+            <div class="mission-section">
+                <h2>Our Mission</h2>
+                <p>We believe that every student deserves access to intelligent learning tools that make studying more effective and enjoyable. AI Notes Assistant was created to bridge the gap between traditional note-taking and modern AI technology.</p>
+                <p>Our goal is to help students focus on understanding and learning, rather than spending countless hours organizing and searching through their materials.</p>
+            </div>
+
+            <!-- Values -->
+            <div class="values-grid">
+                <div class="value-card">
+                    <h3>🎯 Student-Focused</h3>
+                    <p>Every feature is designed with students in mind, addressing real academic challenges and making learning more accessible.</p>
+                </div>
+                <div class="value-card">
+                    <h3>🔒 Privacy First</h3>
+                    <p>Your documents and study materials are secure and private. We respect your academic privacy and protect your data.</p>
+                </div>
+                <div class="value-card">
+                    <h3>⚡ Simple & Fast</h3>
+                    <p>We believe great tools should be easy to use. No complicated setups or learning curves - just intelligent assistance when you need it.</p>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats-section">
+                <h2>Making a Difference</h2>
+                <p>AI Notes Assistant is helping students worldwide study more effectively and achieve better academic outcomes.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h3>10K+</h3>
+                        <p>Students Helped</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>50K+</h3>
+                        <p>Documents Processed</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>95%</h3>
+                        <p>User Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Section -->
+            <div class="team-section">
+                <h2>Built by Students, for Students</h2>
+                <p>AI Notes Assistant was developed by a team of students and educators who understand the challenges of modern academic life. We've experienced the frustration of disorganized notes, missed study sessions, and the overwhelming amount of information students need to process.</p>
+                <p>That's why we created a tool that doesn't just store your notes - it actively helps you learn from them.</p>
+                
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <p>Have questions, feedback, or suggestions? We'd love to hear from you!</p>
+                    <p>Email: <a href="mailto:support@ainotesassistant.com">support@ainotesassistant.com</a></p>
+                    <p>Follow us: <a href="#">@AINotesAssistant</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

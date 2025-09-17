@@ -273,6 +273,6 @@ If you find this project helpful, please give it a star on GitHub!
 ## 📑 Project Report
 
 - [Project Demo Video (Google Drive)](https://drive.google.com/file/d/1s-uy6phj2ApJ2fLJf-OY3SHTP8AHnUzc/view?usp=sharing)
-- [project.pdf (local, in assets folder)](assets/project.pdf)
+- [project.pdf (local, in assets folder)](https://github.com/yuvrajk110905/RAG-MCP-Study2/blob/main/assests/project.pdf)
 
 For issues and questions, please open an issue in the GitHub repository.

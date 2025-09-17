@@ -272,7 +272,7 @@ If you find this project helpful, please give it a star on GitHub!
 
 ## 📑 Project Report
 
-- [Project Report (Google Drive)](https://drive.google.com/file/d/1s-uy6phj2ApJ2fLJf-OY3SHTP8AHnUzc/view?usp=sharing)
+- [Project Demo Video (Google Drive)](https://drive.google.com/file/d/1s-uy6phj2ApJ2fLJf-OY3SHTP8AHnUzc/view?usp=sharing)
 - [project.pdf (local, in assets folder)](assets/project.pdf)
 
 For issues and questions, please open an issue in the GitHub repository.
